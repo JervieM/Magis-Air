@@ -1,0 +1,113 @@
+.button {
+    color: var(--button-enabled-color, white);
+    background: var(--button-enabled-bg-color, black);
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.button.primary.filled {
+    --button-enabled-bg-color: var(--primary);
+    --button-enabled-border-color: var(--primary);
+    --button-hover-bg-color: var(--primary-07);
+    --button-hover-border-color: var(--primary-07);
+    --button-selected-bg-color: var(--primary-09);
+    --button-selected-border-color: var(--primary-09);
+}
+
+.button.secondary.filled {
+    --button-enabled-bg-color: var(--secondary);
+    --button-enabled-border-color: var(--secondary);
+    --button-hover-bg-color: var(--secondary-07);
+    --button-hover-border-color: var(--secondary-07);
+    --button-selected-bg-color: var(--secondary-09);
+    --button-selected-border-color: var(--secondary-09);
+}
+
+.button.tertiary.filled {
+    color: var(--primary);
+    --button-enabled-bg-color: var(--tertiary-03);
+    --button-enabled-border-color: var(--primary);
+    --button-hover-bg-color: var(--tertiary-07);
+    --button-hover-border-color: var(--tertiary-07);
+    --button-selected-bg-color: var(--tertiary-09);
+    --button-selected-border-color: var(--tertiary-09);
+}
+
+.button.enabled {
+    color: var(--button-enabled-color);
+    background: var(--button-enabled-bg-color);
+    border-color: var(--button-enabled-border-color);
+}
+
+.button.enabled:hover {
+    color: var(--button-hover-color);
+    background: var(--button-hover-bg-color);
+    border-color: var(--button-hover-border-color);
+}
+
+.button.selected {
+    color: var(--button-selected-color);
+    background: var(--button-selected-bg-color);
+    border-color: var(--button-selected-border-color);
+}
+
+.button.primary.outlined {
+    --button-enabled-border-color: var(--primary);
+    color: var(--primary);
+    background: white;
+    border-color: 2px solid var(--primary); 
+}
+
+.button.primary.outlined:hover {
+    background: var(--primary-02); 
+    border-color: var(--primary-07); 
+}
+
+.button.primary.outlined.selected {
+    background: var(--primary-09); 
+    border-color: var(--primary-09);
+}
+
+.button.secondary.outlined {
+    --button-enabled-border-color: var(--secondary);
+    color: var(--secondary);
+    background: var(--secondary-02);
+    border-color: 2px solid var(--secondary); 
+}
+
+.button.secondary.outlined:hover {
+    background: var(--secondary-03);
+    border-color: var(--secondary-07);
+}
+
+.button.secondary.outlined.selected {
+    background: var(--secondary-09);
+    border-color: var(--secondary-09);
+}
+
+.button.tertiary.outlined {
+    --button-enabled-border-color: var(--tertiary);
+    color: var(--tertiary);
+    background: white;
+    border: 2px solid var(--tertiary-09);
+}
+
+.button.tertiary.outlined:hover {
+    background: var(--tertiary-05);
+    border-color: var(--tertiary-07);
+}
+
+.button.tertiary.outlined.selected {
+    background: var(--tertiary-09);
+    border-color: var(--tertiary-09);
+}
+
+.button.disabled,
+.button[disabled] {
+    color: var(--button-disabled-color);
+    background: var(--button-disabled-bg-color);
+    border-color: var(--button-disabled-border-color);
+}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+    }
+
+    .addpassenger {
+        display: flex;
+        align-items: stretch;
+        min-height: 100vh;
+        margin: 0;
+        align-items: center; 
+    }
+
+    .addpassenger .image-container {
+        flex: 0 0 45%; 
+        height: 100vh;
+        margin-right: 1.5rem;
+        padding: 0; 
+    }
+
+    .addpassenger .image-container img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        display: block; 
+    }
+
+    .addpassenger .addpass {
+        text-align: left;
+        padding-left: 5.5rem;
+        min-width: 500px;
+        width: auto;
+        overflow-wrap: break-word;
+    }
+
+    .addpassenger .addpass .header{
+        color: var(--primary-08);
+        margin-bottom: 10px;
+    }
+
+    .addpassenger .addpass a {
+        text-decoration: none;
+    }
+
+    .addpassenger .addpass a:hover {
+        text-decoration: underline;
+    }
+
+    .addpassenger .addpass button {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: 4px;
+    }
+
+    .addpassenger .form-container p {
+        text-decoration: none;
+    }
+
+    .addpassenger input, .addpass select {
+        padding: 10px;
+        margin-top: 5px;
+        width: 40%; 
+    }
+
+</style>
+{% endblock %}
+
+{% block title %}Passenger Form{% endblock %}
+
+{% block content %}
+<div class="addpassenger"> 
+    <div class="image-container">
+        <img src="{% static 'img/passengers.png' %}" alt="Passenger Image">
+    </div>
+    <div class="addpass">
+        <h2 class="header">{% if object %}Update Passenger{% else %}Add New Passenger{% endif %}</h2>
+        <div class="form-container">
+            <form method="post">
+                {% csrf_token %}
+                    <p><strong>First Name:</strong> {{ form.first_name }}</p>
+                    <p><strong>Middle Name:</strong> {{ form.middle_name }}</p>
+                    <p><strong>Last Name:</strong> {{ form.last_name }}</p>
+
+                    <div class="form-group">
+                        <label for="date"><strong>Select Date:</strong></label>
+                        <!-- Set the birth_date value with date filter -->
+                        <input type="date" id="date" name="birth_date" value="{{ form.birth_date.value|date:"Y-m-d" }}">
+                    </div>
+
+                    <p><strong>Gender:</strong> {{ form.gender }}</p>
+                    <button type="submit" class="button primary filled">Save</button>
+                    <a href="{% url 'flight_booking:passenger_list' %}">
+                        <button class="button tertiary filled" type="button">Cancel</button> 
+                    </a>
+            </form>
+        </div> 
+    </div>
+</div>
+{% endblock %}

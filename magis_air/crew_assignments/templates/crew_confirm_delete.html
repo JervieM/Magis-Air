@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+        position: relative;
+    }
+
+    #building {
+    position: absolute;
+    z-index: -1; 
+    bottom: 40; 
+    left: 0; 
+    width: 100vw; 
+    height: 60vh; 
+    object-fit: cover; 
+    }
+
+    #delete-crewmems {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    #delete-crewmems .text-container{
+        padding: 5rem;
+        background-color: var(--neutral-01);
+        border-radius: 15px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    #delete-crewmems .header{
+        color: var(--primary-08);
+    }
+    
+    #delete-crewmems a {
+        text-decoration: none;
+    }
+    
+    #delete-crewmems a:hover {
+        text-decoration: underline;
+    }
+
+    #delete-crewmems button {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: 4px;
+    }
+
+</style>
+{% endblock %}
+
+{% block title %}Delete Crew Member{% endblock %}
+
+{% block content %}
+<div id="delete-crewmems"> 
+    <img id="building" src="{% static 'img/buildings.png' %}" alt="Background Building" /> 
+
+    <div class="text-container">
+        <h2 class="header">Are you sure you want to remove this crew member?</h2>
+        <p><strong>Crew ID:</strong> {{ object.crew_id }} - {{ object.first_name }} {% if object.middle_name %} {{ object.middle_name|slice:":1" }}. {% endif %} {{ object.last_name }} - {{ object.role }} </p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="button primary filled">Confirm Delete</button>
+            <a href="{% url 'crew_assignments:crew_list' %}">
+                <button class="button tertiary filled" type="button">Cancel</button> 
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

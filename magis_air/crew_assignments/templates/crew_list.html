@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Crew Members{% endblock %}
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+        position: relative;
+    }
+
+    #building {
+    position: absolute;
+    z-index: -1; 
+    bottom: 40; 
+    left: 0; 
+    width: 100vw; 
+    height: 60vh; 
+    object-fit: cover; 
+    }
+
+    #crewmems {
+        padding-left: 5rem;
+        padding-right: 5rem;
+        padding-top: 3.5rem;
+        text-align: center;
+    }
+    #crewmems .header{
+        color: var(--primary-08);
+    }
+
+    #crewmems table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: var(--neutral-01);
+        border-radius: 15px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    #crewmems th, td {
+        padding: 25px;
+        text-align: left;
+        border: none;
+    }
+    
+    #crewmems th {
+        color: var(--primary-07);
+    }
+    
+    #crewmems a {
+        text-decoration: none;
+    }
+    
+    #crewmems a:hover {
+        text-decoration: underline;
+    }
+
+    #crewmems button {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: 4px;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .crew-form {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        gap: 1rem; 
+        margin-top: 2rem; 
+        margin-bottom: 2rem;
+    }
+
+    .crew-form .form-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; 
+    }
+
+    .crew-form input,
+    .crew-form select {
+        width: 150px; 
+        padding: 0.5rem;
+        border: 1px solid var(--neutral-02);
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .crew-form button:hover {
+        background-color: var(--primary-07);
+    }
+
+    .spacer {
+        border-left: 2px solid var(--secondary-10);
+        height: 30px; 
+    }
+
+    #crewmems .upcoming {
+        color: red;
+    }
+
+    #crewmems .completed {
+        color: green;
+    }
+
+</style>
+{% endblock %}
+{% block content %}
+<div id="crewmems">
+    <img id="building" src="{% static 'img/buildings.png' %}" alt="Background Building" /> 
+
+    <h1 class="header">Current Crew Members</h1>
+
+    <form method="GET" action="{% url 'crew_assignments:crew_list' %}">
+        {% csrf_token %}
+        <div class="crew-form">
+            <!-- Crew ID Input -->
+            <div class="form-group">
+                <label for="crew-id"><strong>Input Crew ID:</strong></label>
+                {{ crew_id_form.crew_ID }}
+            </div>
+    
+            <!-- Spacer -->
+            <div class="spacer"></div>
+    
+            <!-- Crew Role Dropdown -->
+            <div class="form-group">
+                <label for="crew-role"><strong>Select Crew Role:</strong></label>
+                {{ crew_role_form.role }}
+            </div>
+
+            <!-- Search Button -->
+            <button type="submit" class="button primary filled">Search</button>
+
+            <!-- Clear Filter -->
+            <div class="crew-form" style="justify-content: space-between;">
+                <a href="{% url 'crew_assignments:crew_list' %}">
+                    <button class="button primary outlined" type="button">Clear Filter</button>
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <!-- Table to display crew information -->
+    <table>
+        <thead>
+            <tr>
+                <th>Crew ID</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Assigned Flight Schedules</th>
+                <th>Actions</th> <!-- For Edit and Delete links -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for crew in object_list %}
+                <tr>
+                    <!-- Crew ID -->
+                    <td>{{ crew.crew_id }}</td>
+
+                    <!-- Crew Name -->
+                    <td>{{ crew.first_name }} {% if crew.middle_name %} {{ crew.middle_name|slice:":1" }}. {% endif %} {{ crew.last_name }}</td>
+                    
+                    <!-- Role -->
+                    <td>{{ crew.role }}</td>
+                    
+                    <!-- Assigned Flight Schedules -->
+                    <td>
+                        {% if crew.flight_schedules.all %}
+                            {% with crew.flight_schedules.all|dictsortreversed:"date" as sorted_schedules %}
+                                {% for schedule in sorted_schedules %}
+                                    <span class="{% if schedule.date|date:'Y-m-d' > current_date|date:'Y-m-d' %}upcoming{% elif schedule.date|date:'Y-m-d' == current_date|date:'Y-m-d' %}current{% else %}completed{% endif %}">
+                                        {% if schedule.date|date:"Y-m-d" > current_date|date:"Y-m-d" %}
+                                            [Upcoming]
+                                        {% elif schedule.date|date:"Y-m-d" == current_date|date:"Y-m-d" %}
+                                            [Current]
+                                        {% else %}
+                                            [Completed]
+                                        {% endif %}
+                                        {{ schedule.schedule_id }} on {{ schedule.date }}
+                                    <span><br>
+                                {% endfor %}
+                            {% endwith %}
+                        {% else %}
+                            <p>No assigned schedules</p>
+                        {% endif %}
+                    </td>
+
+                    <!-- Actions -->
+                    <td>
+                        <a href="{% url 'crew_assignments:crew_update' crew.pk %}">
+                            <button class="button primary filled" type="button">Edit</button>
+                        </a>
+                        <a href="{% url 'crew_assignments:crew_delete' crew.pk %}">
+                            <button class="button tertiary filled" type="button">Delete</button> 
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'crew_assignments:crew_create' %}">
+        <button class="button primary filled" type="button">Add New Crew Member</button>
+    </a>
+</div>
+{% endblock %}

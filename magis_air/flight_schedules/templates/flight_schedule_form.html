@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+        position: relative;
+    }
+
+    .addsched-container {
+        display: flex;
+        min-height: 100vh;
+        margin: 0;
+        align-items: center;
+    }
+
+    .addsched-container .image-container {
+        flex: 0 0 35%; 
+        height: 100vh;
+        margin-right: 3rem;
+        padding: 0; 
+    }
+
+    .addsched-container .image-container img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        display: block; 
+    }
+
+    .addcrewmems .form-column {
+        flex: 1; 
+        box-sizing: border-box; 
+        text-align: left;
+    }
+    
+    .addsched-container .header {
+        color: var(--primary-08);
+    }
+
+    .addsched-container .form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 40px; 
+    }
+
+    .addsched-container .form p,
+    .addsched-container .form .form-group {
+        display: flex;
+        flex-direction: column;
+        margin: 10px 0;
+    }
+
+    .addsched-container .form input, .form select {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        margin-top: 5px; 
+    }
+
+    .addsched-container .form .flight-row {
+        grid-column: span 2; 
+    }
+
+    .addsched-container .form input[type="text"] {
+        width: 100%; 
+    }
+
+    .addsched-container .crew-members-container {
+        margin-top: 20px;
+    }
+
+    .addsched-container .crew-members-container fieldset {
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+
+    .addsched-container .crew-members-container legend {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .addsched-container .buttons {
+        margin-top: 20px;
+    }
+
+    .addsched-container .buttons button {
+        margin-right: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Schedule Form{% endblock %}
+
+{% block content %}
+<div class="addsched-container">
+    <div class="image-container">
+        <img src="{% static 'img/image.png' %}" alt="Flight Image">
+    </div>
+    <div class="form-column">
+        <h2 class="header">{% if object %}Update{% else %}Add New{% endif %} Flight Schedule</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form">
+                {% if object %}
+                <p>
+                    <label for="id_schedule_id"><strong>Schedule ID:</strong></label>
+                    <input type="text" id="id_schedule_id" name="schedule_id" value="{{ form.schedule_id.value }}" readonly>
+                </p>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="date"><strong>Select Date:</strong></label>
+                    <input type="date" id="date" name="date" value="{{ form.date.value|date:"Y-m-d" }}">
+                </div>
+
+                <div class="flight-row">
+                    <p>
+                        <strong>Flight:</strong> {{ form.flight }}
+                    </p>
+                </div>
+            </div>
+            <div class="crew-members-container">
+                <fieldset>
+                    <legend>Select Crew Members</legend>
+                    {% for crew in crew_members %}
+                        <label>
+                            <input type="checkbox" name="crew_members" value="{{ crew.crew_id }}"
+                                {% if crew in selected_crew_members %}checked{% endif %}>
+                            {{ crew.crew_id }} - {{ crew.first_name }} {{ crew.last_name }} - {{ crew.role }}
+                        </label><br>
+                    {% endfor %}
+                </fieldset>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="button primary filled">Save</button>
+                <a href="{% url 'flight_schedules:flight_schedule_list' %}">
+                    <button class="button tertiary filled" type="button">Cancel</button> 
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+    }
+
+    .addcrewmems {
+        display: flex;
+        align-items: stretch;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .addcrewmems .image-container {
+        flex: 0 0 35%; 
+        height: 100vh;
+        margin-right: 1.5rem;
+        padding: 0; 
+    }
+
+    .addcrewmems .image-container img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        display: block; 
+    }
+
+    .addcrewmems .addmems {
+        flex: 1; 
+        padding: 2rem;
+        box-sizing: border-box; 
+        text-align: left;
+        align-content: center;
+    }
+
+    .addcrewmems .addmems .header {
+        color: var(--primary-08);
+        margin-bottom: 10px;
+    }
+
+    .addcrewmems .addmems .form-container p {
+        margin-top: 1rem; 
+        margin-bottom: 0.5rem; 
+    }
+    
+    .addcrewmems .addmems .form-container p strong {
+        display: block; 
+        margin-bottom: 0.3rem; 
+    }
+    
+    .addcrewmems .addmems .form-container input, 
+    .addcrewmems .addmems .form-container select {
+        padding: 10px; 
+        width: 40%; 
+    }
+</style>
+{% endblock %}
+
+{% block title %}Crew Member Form{% endblock %}
+
+{% block content %}
+<div class="addcrewmems"> 
+    <div class="image-container">
+        <img src="{% static 'img/crew.png' %}" alt="Flight Image">
+    </div>
+    <div class="addmems">
+        <h2 class="header">{% if object %}Update{% else %}Add New{% endif %} Crew Member</h2>
+        <div class="form-container">
+            <form method="post">
+                {% csrf_token %}
+                    <p><strong>First Name:</strong> {{ form.first_name }}</p>
+                    <p><strong>Middle Name:</strong> {{ form.middle_name }}</p>
+                    <p><strong>Last Name:</strong> {{ form.last_name }}</p>
+                    <p><strong>Role:</strong> {{ form.role }}</p>
+                    <button type="submit" class="button primary filled" >Save</button>
+                    <a href="{% url 'crew_assignments:crew_list' %}">
+                        <button class="button tertiary filled" type="button">Cancel</button> 
+                    </a>
+            </form>
+        </div> 
+    </div>
+</div>
+{% endblock %}

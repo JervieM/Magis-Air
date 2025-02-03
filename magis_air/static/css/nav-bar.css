@@ -1,0 +1,42 @@
+/* Container for logo and navigation */
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--primary);
+    padding: 1rem;
+}
+
+/* Logo styling */
+.navbar-container .logo {
+    width: 40px; 
+    height: auto;
+}
+
+/* Navbar styling */
+.navbar-container .navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Individual link styling */
+.navbar-container .navbar a {
+    color: var(--neutral-01);
+    font-size: var(--default-font-size);
+    text-decoration: none;
+    margin-right: 1.5rem;
+    display: flex;
+    align-items: center; 
+}
+
+.navbar-container .navbar a:hover {
+    color: var(--primary-02);
+}
+
+/* Adjust spacing for list items */
+.navbar-container .navbar li {
+    margin-right: 1.5rem;
+}

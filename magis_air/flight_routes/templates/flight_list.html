@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Flights{% endblock %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+    }
+
+    #flightroutes .top-right-svg, .bottom-left-svg {
+        position: absolute;
+        z-index: -1; 
+        max-width: 100%; 
+        max-height: 100%;
+    }
+
+    #flightroutes .top-right-svg {
+        top: -150px;
+        right: -250px;
+    }
+
+    #flightroutes .bottom-left-svg {
+        transform: scaleX(-1);
+        bottom: -20px;
+        left: -250px;
+    }
+
+    #flightroutes {
+        position: relative;
+        padding-left: 5rem;
+        padding-right: 5rem;
+        padding-top: 3.5rem;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    #flightroutes .header {
+        color: var(--primary-08);
+    }
+
+    #flightroutes table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: var(--neutral-01);
+        border-radius: 15px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #flightroutes th, td {
+        padding: 25px;
+        text-align: left;
+        border: none;
+    }
+
+    #flightroutes th {
+        color: var(--primary-07);
+    }
+
+    #flightroutes a {
+        text-decoration: none;
+    }
+
+    #flightroutes a:hover {
+        text-decoration: underline;
+    }
+
+    #flightroutes button {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: 5px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .flight-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        margin-top: 2rem;
+    }
+
+    .flight-form .form-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; 
+    }
+
+    .flight-form input,
+    .flight-form select {
+        padding: 0.5rem;
+        width: 150px;
+        border-radius: 5px;
+        border: 1px solid var(--neutral-02);
+        text-align: center;
+    }
+
+    .flight-form button:hover {
+        background-color: var(--primary-07); 
+    }
+
+    
+    .spacer {
+        border-left: 2px solid var(--secondary-10);
+        height: 30px; 
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="flightroutes">
+    <img class="top-right-svg" src="{% static 'svg/continent.svg' %}" alt="Top Right Continent" />
+    <img class="bottom-left-svg" src="{% static 'svg/continent.svg' %}" alt="Bottom Left Continent" />
+    
+    <h1 class="header">Available Flight Routes</h1>
+
+    <form method="GET" action="{% url 'flight_routes:flight_list' %}">
+        {% csrf_token %}
+        <div class="flight-form">
+            
+            <div class="form-group">
+                <label for="origin"><strong>Select Origin:</strong></label>
+                {{ form.origin }}
+            </div>
+
+            <div class="spacer"></div>
+            
+            <div class="form-group">
+                <label for="destination"><strong>Select Destination:</strong></label>
+                {{ form.destination }}
+            </div>
+
+            <button type="submit" class="button primary filled">Search</button>
+
+            <div class="pass-form" style="justify-content: space-between;">
+                <a href="{% url 'flight_routes:flight_list' %}">
+                    <button class="button primary outlined" type="button">Clear Filter</button>
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Flight ID</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Travel Duration</th>
+                <th>Departure Time</th>
+                <th>Arrival Time</th>
+                <th>Actions</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in data %}
+                <tr>
+                    <td>
+                        <a href="{% url 'flight_routes:flight_detail' result.pk %}">
+                            {{ result.flight_id }}
+                        </a>
+                    </td>
+                    <td>{{ result.origin }}</td>
+                    <td>{{ result.destination }}</td>
+                    <td>{{ result.travel_duration_hours }} hrs & {{ result.travel_duration_minutes }} mins</td>
+                    <td>{{ result.departure_time|date:"H:i" }}</td>
+                    <td>{{ result.arrival_time }}</td>
+                    <td>
+                        <a href="{% url 'flight_routes:flight_update' result.pk %}">
+                            <button class="button primary filled" type="button">Edit</button>
+                        </a>
+                        <a href="{% url 'flight_routes:flight_delete' result.pk %}">
+                            <button class="button tertiary filled" type="button">Delete</button> 
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'flight_routes:flight_create' %}">
+        <button class="button primary filled" type="button">Add New Flight</button>
+    </a>
+</div>
+{% endblock %}

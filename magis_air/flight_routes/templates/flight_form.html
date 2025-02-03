@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+        position: relative;
+    }
+    
+    .addflight-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        height: 100vh;
+    }
+
+    .addflight-container .flight-column-1 {
+        margin-right: 20px;
+    }
+
+    .addflight-container .addflight {
+        flex: 1;
+        max-width: 50%; 
+        padding-left: 5rem;
+        padding-right: 5rem;
+        text-align: left;
+    }
+
+    .addflight-container .addflight .header {
+        color: var(--primary-08);
+    }
+
+    .addflight-container .addflight a {
+        text-decoration: none;
+    }
+
+    .addflight-container .addflight a:hover {
+        text-decoration: underline;
+    }
+
+    .addflight-container .addflight button {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: 4px;
+    }
+
+    .addflight-container .flight-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        gap: 20px;
+        align-items: start;
+        justify-items: start;
+    }
+
+    .addflight-container .flight-form p {
+        margin: 10px 0;
+    }
+
+    .addflight-container .flight-form p strong {
+        margin-right: 10px;
+    }
+
+    .addflight-container .flight-form input, .flight-form select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+    }
+
+    .addflight-container .travel-duration-container {
+        margin-bottom: 0px;
+    }
+
+    .travel-duration {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .image-container {
+        flex: 0 0 60%; 
+        height: 100vh;
+        display: flex;
+        justify-content: right;
+    }
+    
+    .image-container img {
+        height: 100%;
+        width: auto;
+        object-fit: cover;
+    }
+    
+</style>
+{% endblock %}
+
+{% block title %}Flight Form{% endblock %}
+
+{% block content %}
+<div class="addflight-container">
+    <div class="addflight">
+        <h2 class="header">{% if object %}Update{% else %}Add New{% endif %} Flight</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="flight-form">
+                <div class="flight-column-1">
+                    <p><strong>Flight ID:</strong>
+                        <input type="text" id="id_flight_id" name="flight_id" value="{{ form.flight_id.value }}" readonly class="form-control">
+                    </p>
+                    <p><strong>Origin:</strong> {{ form.origin }}</p>
+                    <p><strong>Destination:</strong> {{ form.destination }}</p>
+                </div>
+                <div class="flight-column-2">
+                    <div class="travel-duration-container">
+                        <p><strong>Travel Duration:</strong></p>
+                        <div class="travel-duration">
+                            <p><strong>Hours:</strong> {{ form.travel_duration_hours }}</p>
+                            <p><strong>Minutes:</strong> {{ form.travel_duration_minutes }}</p>
+                        </div>
+                    </div>
+                    {% if form.travel_duration_hours.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.travel_duration_hours.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if form.travel_duration_minutes.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.travel_duration_minutes.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <p><strong>Departure Time:</strong> {{ form.departure_time }}</p>
+                </div>
+            </div>
+            <button type="submit" class="button primary filled">Save</button>
+            <a href="{% url 'flight_routes:flight_list' %}">
+                <button class="button tertiary filled" type="button">Cancel</button> 
+            </a>
+        </form>
+    </div>
+
+    <div class="image-container">
+        <img src="{% static 'img/flight_route_add.png' %}" alt="Flight Image">
+    </div>
+</div>
+{% endblock %}

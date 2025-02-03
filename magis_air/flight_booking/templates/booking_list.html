@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Booking List{% endblock %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+        position: relative;
+    }
+
+    #building {
+        position: absolute;
+        z-index: -1;
+        bottom: 40;
+        left: 0;
+        width: 100vw;
+        height: 60vh;
+        object-fit: cover;
+    }
+
+    #bookings {
+        padding-left: 5rem;
+        padding-right: 5rem;
+        padding-top: 3.5rem;
+        text-align: center;
+    }
+
+    #bookings .header {
+        color: var(--primary-08);
+    }
+
+    #bookings table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: var(--neutral-01);
+        border-radius: 15px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #bookings th, td {
+        padding: 25px;
+        text-align: left;
+        border: none;
+    }
+
+    #bookings th {
+        color: var(--primary-07);
+    }
+
+    #bookings a {
+        text-decoration: none;
+    }
+
+    #bookings a:hover {
+        text-decoration: underline;
+    }
+
+    #bookings button {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: 4px;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .book-form {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        gap: 1rem;
+        margin-top: 2rem; 
+        margin-bottom: 2rem;
+    }
+
+    .book-form .form-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; 
+    }
+
+    .book-form input,
+    .book-form select {
+        width: 150px; 
+        padding: 0.5rem;
+        border: 1px solid var(--neutral-02);
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .book-form button:hover {
+        background-color: var(--primary-07); 
+    }
+
+    .spacer {
+        border-left: 2px solid var(--secondary-10);
+        height: 30px; 
+    }
+    
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="bookings">
+    <img id="building" src="{% static 'img/buildings.png' %}" alt="Background Building" />
+
+    <h1 class="header">Current Bookings</h1>
+
+    <form method="GET" action="{% url 'flight_booking:booking_list' %}">
+        {% csrf_token %}
+        <div class="book-form">
+            <!-- Booking ID Input -->
+            <div class="form-group">
+                <label for="booking-id"><strong>Input Booking ID:</strong></label>
+                {{ booking_id_form.booking_id }}
+            </div>
+    
+            <!-- Spacer -->
+            <div class="spacer"></div>
+    
+            <!-- Passenger Name Input -->
+            <div class="form-group">
+                <label for="passenger-name"><strong>Input Passenger Name:</strong></label>
+                {{ passenger_id_form.passenger }}
+            </div>
+    
+            <!-- Search Button -->
+            <button type="submit" class="button primary filled">Search</button>
+
+            <!-- Clear Filter -->
+            <div class="book-form" style="justify-content: space-between;">
+                <a href="{% url 'flight_booking:booking_list' %}">
+                    <button class="button primary outlined" type="button">Clear Filter</button>
+                </a>
+            </div>
+        </div>
+    </form>    
+
+    <!-- Table to display booking information -->
+    <table>
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Passenger Name</th>
+                <th>Flight</th>
+                <th>Total Cost</th>
+                <th>Actions</th> <!-- For Edit and Delete links -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in object_list %}
+                <tr>
+                    <!-- Booking ID -->
+                    <td>{{ booking.booking_id }}</td>
+
+                    <!-- Passenger Name -->
+                    <td>{{ booking.passenger.name }}</td>
+
+                    <!-- Flight -->
+                    <td>{{ booking.flight }}</td>
+
+                    <!-- Total Cost -->
+                    <td>{{ booking.total_cost }} USD</td>
+
+                    <!-- Actions -->
+                    <td>
+                        <a href="{% url 'flight_booking:booking_update' booking.pk %}">
+                            <button class="button primary filled" type="button">Edit</button>
+                        </a>
+                        <a href="{% url 'flight_booking:booking_delete' booking.pk %}">
+                            <button class="button tertiary filled" type="button">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'flight_booking:booking_create' %}">
+        <button class="button primary filled" type="button">Create New Booking</button>
+    </a>
+    <a href="{% url 'flight_booking:passenger_list' %}">
+        <button class="button tertiary filled" type="button">See Current Passengers</button>
+    </a>
+</div>
+{% endblock %}

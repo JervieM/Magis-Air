@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Booking Form{% endblock %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: var(--tertiary-01);
+    }
+
+    .addbooking {
+        display: flex;
+        align-items: stretch;
+        min-height: 100vh;
+        margin: 0;
+        align-items: center; 
+    }
+
+    .addbooking .image-container {
+        flex: 0 0 45%; 
+        height: 100vh;
+        margin-right: 3rem;
+        padding: 0; 
+    }
+
+    .addbooking .image-container img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        display: block; 
+    }
+
+    .addcrewmems .form-container {
+        flex: 1; 
+        padding: 2rem;
+        box-sizing: border-box; 
+        text-align: left;
+    }
+
+    .addbooking .form-container .button {
+        margin-top: 0.5rem;
+    }
+    
+    .addbooking input, .form-container select {
+        padding: 0.25rem;
+        margin-top: 0.25rem;
+        width: 40%; 
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="addbooking"> 
+    <div class="image-container">
+        <img src="{% static 'img/booking.png' %}" alt="Flight Image">
+    </div> 
+
+    <div class="form-container">
+        <h2>{% if object %}Update Booking{% else %}Create New Booking{% endif %}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button primary filled">Save</button>
+            <a href="{% url 'flight_booking:booking_list' %}">
+                <button class="button tertiary filled" type="button">Cancel</button> 
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

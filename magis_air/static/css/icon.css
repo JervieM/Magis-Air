@@ -1,0 +1,9 @@
+:root {
+    --icon-size: 16px;
+}
+
+.icon {
+    height: var(--icon-size);
+    vertical-align: middle;
+    margin-right: 0.50rem;
+}
