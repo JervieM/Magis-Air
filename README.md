@@ -1,1 +1,3 @@
 # Magis-Air
+
+An airline booking system designed to efficiently manage critical airline operations, including flight routes, scheduling, booking, and crew assignments. Developed as a Django web app, it features an admin panel that allows for viewing, adding, and removing crew members, managing assignments, schedules, bookings, and simulating luggage handling. The system also integrates an SQL database, enabling data population, filtering, and streamlined operations. On the user side, it provides a seamless experience for searching and booking flights, checking prices, viewing assigned crew members, managing reservations, and customizing travel with additional services.
